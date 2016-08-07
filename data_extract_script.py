@@ -2,10 +2,12 @@
 import vk
 import datetime
 from time import sleep
+from data_filter import Filter
+
 
 class Extracter:
     # standart constant for max amount of returned posts
-    MAX_COUNT = 200
+    MAX_COUNT = 100
     # it is allowed to make 3 requests/second to avoid being banned
     REQUESTS_PER_SECOND = 3
 
@@ -39,9 +41,14 @@ class Extracter:
 
             # put all results in the dataset
             for item in response['items']:
-                # TODO data filter
-                # TODO distribution and saving the data to the disk
-                dataset.append(item['text'])
+                # input data filter
+                # length filter is used to avoid too short or too long posts
+                # simple spam-filter  the most used keywords
+                text = item['text']
+                if Filter.lengthFilter(text)\
+                        and Filter.spamFilter(text):
+                    # TODO distribution and saving the data to the disk
+                    dataset.append(text)
 
             # there's a delay after the last request
             # if it is necessary
