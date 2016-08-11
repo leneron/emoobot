@@ -1,7 +1,6 @@
 # main script for handling the messages
 # serves many users with the standart asynchronous module
 # more effective than blocking algorithms
-
 import asyncio
 import telepot
 from telepot.aio.delegate import per_chat_id, create_open

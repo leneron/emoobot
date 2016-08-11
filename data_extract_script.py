@@ -6,7 +6,7 @@ from data_filter import Filter
 from data_editor import Editor
 import json
 import os
-from string import *
+
 
 class Extracter:
     # standart constant for max amount of returned posts
@@ -37,7 +37,6 @@ class Extracter:
             name = os.path.basename(fileName)
             if (name.find(key)) != -1:
                 tempIndex = int(name.split(self.SPLIT_SYMBOL)[-1])
-                print(tempIndex)
                 if tempIndex > index:
                     index = tempIndex
 
@@ -83,8 +82,9 @@ class Extracter:
                     text = item['text']
                     if Filter.lengthFilter(text)\
                             and Filter.spamFilter(text):
-                        # text = Editor.clean(text)
-                        dataset.append(text)
+                        text = Editor.clean(text)
+                        if text:
+                            dataset.append(text)
 
                 # there's a delay after the last request
                 # if it is necessary
@@ -104,4 +104,4 @@ class Extracter:
 # code example
 vkApi = Extracter()
 # this is an example method call, that extracts 1200 posts with the keyword '☺️'
-vkApi.extractNewsfeed('☺️', 1200, 200)
+vkApi.extractNewsfeed('☺️', 200, 200)
