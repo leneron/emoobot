@@ -50,14 +50,32 @@ class Editor:
         # separate the smiles into the words
         text = Editor.SMILES_RE.sub(Editor.separateSmile, text)
 
-        words = text.split()
-        # set each word to the normalized form
-        for i in range(len(words)):
-            # TODO removing the unnecessary words
-            words[i] = Editor.MORPH.parse(words[i])[0].normal_form
-
-        # TODO translation
         # detect the language of each word and translate into Russian
         # it will be done for convenience in further data mining
+        try:
+            lang = Editor.TRANSLATOR.detect(text)
 
-        return words
+            if lang != 'ru':
+                text = Editor.TRANSLATOR.translate(text, lang = 'ru')['text']
+        except YandexTranslateException:
+            # if there is something wrong with detecting the languate
+            # and/or translation, return nothing
+            return None
+        else:
+            words = text.split()
+            # set each word to the normalized form
+            i = 0
+            while i < len(words):
+                # removing the unnecessary words
+                wordProperty = Editor.MORPH.parse(words[i])[0]
+                # more about analysis in the documentation:
+                # http://pymorphy2.readthedocs.io/en/latest/user/grammemes.html
+                if wordProperty.normalized.tag.POS in {'NUMR','NPRO','PREP', 'CONJ'}:
+                    words.remove(words[i])
+                    i -= 1
+                else:
+                    # normalization
+                    words[i] = wordProperty.normal_form
+
+                i += 1
+            return words

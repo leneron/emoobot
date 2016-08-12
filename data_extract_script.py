@@ -35,7 +35,7 @@ class Extracter:
             # fileName has a structure like this: <key><SPLIT_SYMBOL><number>
             # e.g. ☺_3
             name = os.path.basename(fileName)
-            if (name.find(key)) != -1:
+            if key in name:
                 tempIndex = int(name.split(self.SPLIT_SYMBOL)[-1])
                 if tempIndex > index:
                     index = tempIndex

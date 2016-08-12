@@ -11,11 +11,11 @@ class Filter:
     MAX_LENGTH = 400
     # regular expression is compiled in the byte code
     # which is executed by the special engine written on C
-    SPAM_RE = re.compile('руб|грн|цен[аы]?|акци|скид|курс|'
+    SPAM_RE = re.compile('руб|грн|цен[аы]?|акц|скид|зниж|курс|'
                          'брон(ь|(ир(овать|уйте|уем)))|запис(ь|ывайтесь)|'
                          ' лс |личк[ауи]?|'
-                         'подпис|лайк|репост|'
-                         'голосу(ем|йте)|'
+                         'п[оі]дпис|лайк|репост|'
+                         'голос(у([єе]м||йте))?|'
                          'vk\.c(c|om)|askfm',
                          re.I)
 
