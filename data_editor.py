@@ -57,12 +57,13 @@ class Editor:
 
             if lang != 'ru':
                 text = Editor.TRANSLATOR.translate(text, lang = 'ru')['text']
-        except YandexTranslateException:
+
+            words = text.split()
+        except (YandexTranslateException, AttributeError):
             # if there is something wrong with detecting the languate
             # and/or translation, return nothing
             return None
         else:
-            words = text.split()
             # set each word to the normalized form
             i = 0
             while i < len(words):
@@ -78,4 +79,5 @@ class Editor:
                     words[i] = wordProperty.normal_form
 
                 i += 1
+            print(words)
             return words
