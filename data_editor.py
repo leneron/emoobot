@@ -56,7 +56,7 @@ class Editor:
             lang = Editor.TRANSLATOR.detect(text)
 
             if lang != 'ru':
-                text = Editor.TRANSLATOR.translate(text, lang = 'ru')['text']
+                return None
 
             words = text.split()
         except (YandexTranslateException, AttributeError):
