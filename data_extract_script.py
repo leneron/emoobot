@@ -70,13 +70,10 @@ class Extracter:
                                                     count = self.MAX_COUNT,
                                                     end_time = timestamp)
 
-                try:
-                    # search until the last viewed post is reached
-                    # "- 1" is prevention of reduplication posts
-                    timestamp = response['items'][-1]['date'] - 1
-                except IndexError:
-                    print('ERROR: Not enough data!')
-                    break
+                # search until the last viewed post is reached
+                # "- 1" is prevention of reduplication posts
+                timestamp = response['items'][-1]['date'] - 1
+
                 # put all results in the dataset
                 for item in response['items']:
                     # input data filter
@@ -102,9 +99,3 @@ class Extracter:
 
             # save result
             self.saveToFile(data = dataset, key = key)
-
-
-# code example
-vkApi = Extracter()
-# this is an example method call, that extracts 1200 posts with the keyword '☺️'
-vkApi.extractNewsfeed('❤', 1600, 200)

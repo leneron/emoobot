@@ -79,5 +79,4 @@ class Editor:
                     words[i] = wordProperty.normal_form
 
                 i += 1
-            print(words)
             return words

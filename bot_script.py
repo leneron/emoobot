@@ -4,18 +4,23 @@
 import asyncio
 import telepot
 from telepot.aio.delegate import per_chat_id, create_open
+from bayes_classifier import BayesClassifier
+from data_editor import Editor
 
 
 # class that replies messages
 class MessageHandler(telepot.aio.helper.ChatHandler):
+    classifier = BayesClassifier('data_examples/', '_')
+
     def __init__(self, seed_tuple, timeout):
         super(MessageHandler, self).__init__(seed_tuple, timeout)
 
     # await suspends on_message(...) execution
     # until self.sender.sendMessage(...) completes
     async def on_chat_message(self, msg):
-        # TODO handling the incoming message and computing the correct response
-        await self.sender.sendMessage(msg['text'])
+        # handling the incoming message and computing the correct response
+        c = MessageHandler.classifier.getClass(Editor.clean(msg['text']))
+        await self.sender.sendMessage(c)
 
 # creating the bot
 
