@@ -53,14 +53,14 @@ class Editor:
         # detect the language of each word and translate into Russian
         # it will be done for convenience in further data mining
         try:
-            lang = Editor.TRANSLATOR.detect(text)
-
-            if lang != 'ru':
-                return None
+            # lang = Editor.TRANSLATOR.detect(text)
+            #
+            # if lang != 'ru':
+            #     return None
 
             words = text.split()
         except (YandexTranslateException, AttributeError):
-            # if there is something wrong with detecting the languate
+            # if there is something wrong with detecting the language
             # and/or translation, return nothing
             return None
         else:

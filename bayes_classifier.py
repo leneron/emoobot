@@ -12,7 +12,13 @@ class BayesClassifier:
     dictionaries = {}
     # number of documents for each class
     messageDistribution = collections.Counter()
+
+    totalMessages = 0
+
     def __init__(self, path, splitSymbol):
+        self.updateData(path, splitSymbol)
+
+    def updateData(self, path, splitSymbol):
         fileNames = os.listdir(path)
         for fileName in fileNames:
             # fileName has a structure like this: <key><SPLIT_SYMBOL><number>
@@ -22,7 +28,9 @@ class BayesClassifier:
             key = name.split(splitSymbol)[0]
 
             with open(path+fileName, 'r') as file:
-                BayesClassifier.addData(self, key, file)
+                self.addData(key, file)
+
+        self.totalMessages = self.getTotalMessages()
 
     # add data to some class
     def addData(self, key, file):
@@ -39,6 +47,11 @@ class BayesClassifier:
 
         self.dictionaries.update([[key, dictionary]])
 
+    # this value won't change during the work until we want,
+    # because it won't read more data
+    def getTotalMessages(self):
+        return sum(map(int, self.messageDistribution.values()))
+
     # MAIN FUNCTION FOR DEFINING THE CLASS OF MESSAGE
 
     # MULTINOMIAL BAYES MODEL
@@ -47,7 +60,6 @@ class BayesClassifier:
     # where wc[i] is amount of word w repetitions in class c
     # wtotal is total amount of words
     # in all documents of this class
-
 
     def getClass(self, message):
         # c -- class we want to define text
@@ -77,8 +89,7 @@ class BayesClassifier:
         # P(c) = Dc \ D,
         # where Dc is amount of documents, that belongs to c
         # and D is total amount of documents
-        totalMessages = sum(map(int, self.messageDistribution.values()))
-        return self.messageDistribution.setdefault(key, 0) / totalMessages
+        return self.messageDistribution.setdefault(key, 0) / self.totalMessages
 
     def getProbabilityMessageGivenClass(self, key, word):
         # to avoid zero probability in case of absense word in any dictionaries,
@@ -89,7 +100,7 @@ class BayesClassifier:
         totalWords = sum(self.messageDistribution.values())
         v = len(self.dictionaries[key].values())
 
-        if word in self.dictionaries[key]:
+        if word not in self.dictionaries[key]:
             wordInClass = 0
         else:
             wordInClass = self.dictionaries[key][word]
@@ -99,4 +110,4 @@ class BayesClassifier:
 
 # example the class usage
 b = BayesClassifier('data_examples/', '_')
-print(b.getClass(['завтра', 'читаю', 'книга']))
+print(b.getClass(['солнце']))
