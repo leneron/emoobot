@@ -10,10 +10,9 @@ from data_editor import Editor
 
 # class that replies messages
 class MessageHandler(telepot.aio.helper.ChatHandler):
-    classifier = BayesClassifier('data_examples/', '_')
-
     def __init__(self, seed_tuple, timeout):
         super(MessageHandler, self).__init__(seed_tuple, timeout)
+        MessageHandler.classifier = BayesClassifier('data_examples/', '_')
 
     # await suspends on_message(...) execution
     # until self.sender.sendMessage(...) completes
