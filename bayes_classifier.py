@@ -106,8 +106,3 @@ class BayesClassifier:
             wordInClass = self.dictionaries[key][word]
 
         return (wordInClass + 1) / (totalWords + v)
-
-
-# example the class usage
-b = BayesClassifier('data_examples/', '_')
-print(b.getClass(['солнце']))

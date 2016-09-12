@@ -1,0 +1,45 @@
+# testing the bayes_classifier
+from bayes_classifier import BayesClassifier
+import os
+import json
+
+
+# class that is handling the test dataset
+# and counting the error statistics
+class TestBayesClassifier:
+    totalMessages = 0
+    correct = 0
+
+    def __init__(self, path, splitSymbol):
+        self.classifier = BayesClassifier(path, splitSymbol)
+
+    def isCorrect(self, key, message):
+        return key == self.classifier.getClass(message)
+
+    def checkMessages(self, path, splitSymbol):
+        # handle all test dataset saved in the files
+        fileNames = os.listdir(path)
+        for fileName in fileNames:
+            # fileName has a structure like this: <key><SPLIT_SYMBOL><number>
+            # e.g. ☺_3
+            name = os.path.basename(fileName)
+            # extract key
+            key = name.split(splitSymbol)[0]
+
+            with open(path+fileName, 'r') as file:
+                messages = json.load(file)
+
+                for message in messages:
+                    self.totalMessages += 1
+                    if self.isCorrect(key, message):
+                        self.correct += 1
+
+    def getAccuracy(self):
+        return self.correct / self.totalMessages
+
+path = 'data_examples/'
+dataPath = 'test/'
+splitSymbol = '_'
+test = TestBayesClassifier(path, splitSymbol)
+test.checkMessages(dataPath, splitSymbol)
+print(test.getAccuracy())
