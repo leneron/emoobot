@@ -10,6 +10,9 @@ from data_editor import Editor
 
 # class that replies messages
 class MessageHandler(telepot.aio.helper.ChatHandler):
+    START_MESSAGE = 'Привет! Я Emoobot. Я умею поддерживать настроение разговора. ' \
+                    'Напиши мне что-нибудь! Ах, да, чуть не забыл: я понимаю только русский язык.'
+
     def __init__(self, seed_tuple, timeout):
         super(MessageHandler, self).__init__(seed_tuple, timeout)
         MessageHandler.classifier = BayesClassifier('data_examples/', '_')
@@ -17,8 +20,13 @@ class MessageHandler(telepot.aio.helper.ChatHandler):
     # await suspends on_message(...) execution
     # until self.sender.sendMessage(...) completes
     async def on_chat_message(self, msg):
-        # handling the incoming message and computing the correct response
-        c = MessageHandler.classifier.getClass(Editor.clean(msg['text']))
+        # handling the incoming message
+        if msg['text'] == '/start':
+            c = MessageHandler.START_MESSAGE
+        else:
+            # computing the correct response
+            c = MessageHandler.classifier.getClass(Editor.clean(msg['text']))
+
         await self.sender.sendMessage(c)
 
 # creating the bot
